@@ -2,9 +2,15 @@
   "name": "firestore-transfer",
   "version": "1.0.0",
   "description": "Simple scripts for export / import of Google FireStore data",
-  "main": "index.js",
+  "author": "Jens Riboe",
+  "license": "MIT",
+  "preferGlobal": true,
+  "homepage": "https://github.com/ribomation/firestore-transfer#readme",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rm -rf dist && tsc",
+    "test": "mocha --require ts-node/register test/**/*.test.ts",
+    "clean": "rm -rf dist && rm -f src/*.js && rm -f test/*.js"
   },
   "repository": {
     "type": "git",
@@ -16,10 +22,25 @@
     "node",
     "typescript"
   ],
-  "author": "Jens Riboe",
-  "license": "MIT",
+  "bin": {
+    "firestore-export": "dist/firestore-export.js",
+    "firestore-import": "dist/firestore-import.js"
+  },
   "bugs": {
     "url": "https://github.com/ribomation/firestore-transfer/issues"
   },
-  "homepage": "https://github.com/ribomation/firestore-transfer#readme"
+  "dependencies": {
+    "commander": "^2.12.2",
+    "firebase-admin": "~5.4.2",
+    "firebase-functions": "^0.7.1",
+    "@types/chai": "^4.0.10",
+    "@types/mocha": "^2.2.45",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
+  },
+  "devDependencies": {
+    "ts-node": "^4.1.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
+  }
 }
