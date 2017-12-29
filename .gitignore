@@ -1,6 +1,5 @@
 node_modules/
 .idea/
-dist/
 .npm
 .node_repl_history
 src/*.js
