@@ -6,7 +6,7 @@
   "license": "MIT",
   "preferGlobal": true,
   "homepage": "https://github.com/ribomation/firestore-transfer#readme",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "rm -rf dist && tsc",
     "test": "mocha --require ts-node/register test/**/*.test.ts",
@@ -30,13 +30,15 @@
     "url": "https://github.com/ribomation/firestore-transfer/issues"
   },
   "dependencies": {
-    "commander": "^2.12.2",
-    "firebase-admin": "~5.4.2",
-    "firebase-functions": "^0.7.1",
     "@types/chai": "^4.0.10",
     "@types/mocha": "^2.2.45",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1"
+    "commander": "^2.12.2",
+    "firebase-admin": "~5.5.0",
+    "firebase-functions": "^0.7.5",
+    "get-stdin": "^5.0.1",
+    "mocha": "^4.1.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "ts-node": "^4.1.0",

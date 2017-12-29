@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as commander from 'commander';
 import * as FS from 'fs';
+import * as YAML from 'yamljs';
 
 export type DB = admin.firestore.Firestore;
 
@@ -47,39 +48,6 @@ export function parseArgs(addOptions: (cmd: commander.CommanderStatic) => void):
     return args;
 }
 
-// export function commonArgs(): any {
-//   return commander
-//     .description('Dumps a collection from FireStore')
-//     .name('')
-//     .usage('--key ./service-key.json --db my-firestore-db --col some-collection')
-//     .version('1')
-//     .option('-k, --key <file>', 'Filename of service-key JSON. Default: ./service-key.json')
-//     .option('-d, --db <name>', 'Name of db')
-//     .option('-c, --col <name>', 'Name of collection')
-//     ;
-// }
-
-// export function checkOptions(args: any) {
-//   if (!args.key) {
-//     const SERVICE_KEY = './service-key.json';
-//     if (FS.existsSync(SERVICE_KEY)) {
-//       args.key = SERVICE_KEY;
-//     } else {
-//       console.error('ERROR', 'Missing service-key json file');
-//       args.help();
-//     }
-//   }
-//
-//   if (!args.db) {
-//     console.error('ERROR', 'Missing firestore db name');
-//     args.help();
-//   }
-//
-//   if (!args.col) {
-//     console.error('ERROR', 'Missing firestore collection name');
-//     args.help();
-//   }
-// }
 
 export function isArray(obj: any): boolean {
     return Array.isArray(obj);
@@ -91,6 +59,14 @@ export function isObject(obj: any): boolean {
 
 export function loadJson(filename: string): any {
     return JSON.parse(FS.readFileSync(filename).toString());
+}
+
+export function loadYaml(filename: string): any {
+    return YAML.load(filename);
+}
+
+export function canRead(filename:string):boolean {
+    return FS.existsSync(filename);
 }
 
 export function dump(db: DB, collectionName: string, json: boolean = false): void {
