@@ -6,3 +6,4 @@ dist/
 src/*.js
 test/*.js
 service-key.json
+.firebaserc

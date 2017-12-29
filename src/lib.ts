@@ -16,13 +16,23 @@ export function canRead(filename: string): boolean {
     return FS.existsSync(filename);
 }
 
-//todo: search for service-key in parent dir(s) as well
-//todo: check for .firebaserc file in cur/parent dir (data.projects.default)
+function loadJson(filename:string):any {
+    return JSON.parse(FS.readFileSync(filename).toString());
+}
+
+function findFile(filename: string, dirs: string[]): string {
+    for (let dir of dirs) {
+        const path = `${dir}/${filename}`;
+        if (FS.existsSync(path)) return path;
+    }
+    return undefined;
+}
+
 export function parseArgs(addOptions: (cmd: commander.CommanderStatic) => void): any {
     const args = commander
         .usage('--auth ./service-key.json --db my-firestore-db --col some-collection [input / output]')
         .option('-a, --auth <file>', 'Filename of service-key JSON. Default: ./service-key.json')
-        .option('-d, --db <name>', 'Name of db. Default: ./.firebaserc::projects.default')
+        .option('-d, --db <name>', 'Name of db. Default: ./.firebaserc[projects.default]')
         .option('-c, --col <name>', 'Name of collection')
     ;
     addOptions(<commander.CommanderStatic>args);
@@ -30,18 +40,24 @@ export function parseArgs(addOptions: (cmd: commander.CommanderStatic) => void):
     args.parse(process.argv);
 
     if (!args.key) {
-        const SERVICE_KEY = './service-key.json';
-        if (FS.existsSync(SERVICE_KEY)) {
-            args.key = SERVICE_KEY;
+        const serviceKeyFile = findFile('service-key.json', ['.', '..', '../..']);
+        if (serviceKeyFile) {
+            args.key = serviceKeyFile;
         } else {
-            console.error('ERROR', 'Missing service-key json file');
+            console.error('ERROR', 'Missing service-key file');
             args.help();
         }
     }
 
     if (!args.db) {
-        console.error('ERROR', 'Missing firestore db name');
-        args.help();
+        const firebaseFile = findFile('.firebaserc', ['.', '..', '../..']);
+        if (firebaseFile) {
+            const data = loadJson(firebaseFile);
+            args.db = data.projects.default;
+        } else {
+            console.error('ERROR', 'Missing .firebaserc file');
+            args.help();
+        }
     }
 
     if (!args.col) {
