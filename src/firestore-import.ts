@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {parseArgs, canRead, loadJson, open, upload} from './lib';
+import {parseArgs, canRead, open, upload} from './lib';
 import * as STDIN from 'get-stdin';
 import * as YAML from 'yamljs';
 import * as FS from 'fs';
