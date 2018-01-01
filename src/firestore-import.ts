@@ -4,6 +4,7 @@ import {parseArgs, canRead, open, upload} from './lib';
 import * as STDIN from 'get-stdin';
 import * as YAML from 'yamljs';
 import * as FS from 'fs';
+import * as PATH from 'path';
 
 
 const args = parseArgs(opts => {
@@ -19,6 +20,17 @@ if (!args.json && !args.yaml) {
 if (args.json && args.yaml) {
     console.error('ERROR', 'Specify only one of JSON or YaML file');
     args.help();
+}
+
+if (!args.col) {
+    if (args.json && typeof args.json === 'string') {
+        args.col = PATH.basename(args.json, '.json');
+    } else if (args.yaml && typeof args.yaml === 'string') {
+        args.col = PATH.basename(args.yaml, '.yml');
+    } else {
+        console.error('ERROR', 'Missing firestore collection name');
+        args.help();
+    }
 }
 
 const db = open(args.db, args.key);

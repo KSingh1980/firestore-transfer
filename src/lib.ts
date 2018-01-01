@@ -60,10 +60,10 @@ export function parseArgs(addOptions: (cmd: commander.CommanderStatic) => void):
         }
     }
 
-    if (!args.col) {
-        console.error('ERROR', 'Missing firestore collection name');
-        args.help();
-    }
+    // if (!args.col) {
+    //     console.error('ERROR', 'Missing firestore collection name');
+    //     args.help();
+    // }
 
     return args;
 }

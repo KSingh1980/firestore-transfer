@@ -5,6 +5,7 @@ const lib_1 = require("./lib");
 const STDIN = require("get-stdin");
 const YAML = require("yamljs");
 const FS = require("fs");
+const PATH = require("path");
 const args = lib_1.parseArgs(opts => {
     opts.option('-j, --json [file]', 'Name of JSON data file or read it from stdin');
     opts.option('-y, --yaml [file]', 'Name of YaML data file or read it from stdin');
@@ -16,6 +17,18 @@ if (!args.json && !args.yaml) {
 if (args.json && args.yaml) {
     console.error('ERROR', 'Specify only one of JSON or YaML file');
     args.help();
+}
+if (!args.col) {
+    if (args.json && typeof args.json === 'string') {
+        args.col = PATH.basename(args.json, '.json');
+    }
+    else if (args.yaml && typeof args.yaml === 'string') {
+        args.col = PATH.basename(args.yaml, '.yml');
+    }
+    else {
+        console.error('ERROR', 'Missing firestore collection name');
+        args.help();
+    }
 }
 const db = lib_1.open(args.db, args.key);
 if (args.json && typeof args.json === 'boolean') {
