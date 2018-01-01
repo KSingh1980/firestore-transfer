@@ -63,10 +63,14 @@ was found, it will use the value of `projects.default` as the db name.
 
 Firestore Collection Name
 -------------------------
-You must provide the name for a collection and it must be given explicitly.
+You must provide the name for a collection. However, you can choose to 
+provide it in two different ways:
 
 *  _Explicitly_: `--col my-fsdb-collection`
-
+* _Implicitly_: For imports only, you can use the base filename of a JSON
+or YaML file as the collection name. 
+E.g. `--yaml ./path/to/users.yml` the collection 
+name will be `users`. 
 
 Export
 ======
@@ -106,5 +110,43 @@ key.
 
 ### Object Format: `{key1:doc1, key2:doc2, ...}`
 Each document will create/update the given key.
+
+### Document Only
+Each imported item must be a document, i.e. `{...}`. That means,
+the following items will fail.
+
+    [42, "hello firebase", true]  #cannot import three scalars
+    {"msg": "hello firebase"}     #cannot import a single string
+    {"answer": 42}                #cannot import a single number
+    {"cool": true}                #cannot import a single boolean
+
+However, these can be corrected to the following importable documents
+
+    [{"num":42}, {"str":"hello firebase"}, {"bool":true}]
+    {"msg": {"text": "hello firebase"}}
+    {"answer": {"value": 42}}
+    {"cool": {"value": true}}
+
+### Data Types
+Supported data types by firestore are described in the official docs.
+
+* [FireStore Data Types](https://firebase.google.com/docs/firestore/manage-data/add-data#data_types)
+* [Supported Data Types](https://firebase.google.com/docs/firestore/manage-data/data-types)
+
+DateTime values should preferable be specified in ISO8601 format
+
+* [Mozilla: Date.parse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse)
+* [W3C: Date and Time Formats](https://www.w3.org/TR/NOTE-datetime)
+
+Key values might contain any unicode characters except:
+
+* `/` (forward slash)
+* `#` (hash or pound sign)
+* `$` (dollar sign)
+* `.` (period)
+* `[` (left square bracket)
+* `]` (right square bracket)
+
+[More Info (at the end of the table)](https://firebase.google.com/docs/firestore/quotas#limits)
 
 
